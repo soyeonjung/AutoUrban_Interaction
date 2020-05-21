@@ -1,15 +1,11 @@
 using Pkg
 packages = keys(Pkg.installed())
-if !in("Vec", packages)
-    Pkg.add(PackageSpec(url="https://github.com/sisl/Vec.jl.git"))
+if !in("AutomotiveSimulator", packages)
+    Pkg.add(PackageSpec(url="https://github.com/sisl/AutomotiveSimulator.jl.git"))
 end
-if !in("Records", packages)
-    Pkg.add(PackageSpec(url="https://github.com/sisl/Records.jl.git"))
+if !in("AutomotiveVisualization", packages)
+    Pkg.add(PackageSpec(url="https://github.com/sisl/AutomotiveVisualization.jl.git"))
 end
-if !in("AutomotiveDrivingModels", packages)
-    Pkg.add(PackageSpec(url="https://github.com/sisl/AutomotiveDrivingModels.jl.git"))
+if !in("EzXML", packages)
+    Pkg.add(PackageSpec(url="https://github.com/bicycle1885/EzXML.jl"))
 end
-if !in("AutoViz", packages)
-    Pkg.add(PackageSpec(url="https://github.com/sisl/AutoViz.jl.git"))
-end
-
