@@ -12,7 +12,7 @@ function Base.copyto!(v::Vector{Float64}, a::LatLonAccelDirection)
     v[3] = convert(Float64,a.direction)
     v
 end
-function AutomotiveDrivingModels.propagate(veh::Entity{VehicleState, D, Int}, action::LatLonAccelDirection,  roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
+function AutomotiveSimulator.propagate(veh::Entity{VehicleState, D, Int}, action::LatLonAccelDirection,  roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
     previousInd = veh.state.posF.roadind
     a_lat = action.a_lat
     a_lon = action.a_lon
@@ -69,16 +69,16 @@ function AutomotiveDrivingModels.propagate(veh::Entity{VehicleState, D, Int}, ac
     end
 end
 
-function Base.get(::Type{LatLonAccelDirection}, rec::SceneRecord, roadway::Roadway, vehicle_index::Int, pastframe::Int=0)
-    accel_lat = get(ACCFT, rec, roadway, vehicle_index, pastframe)
-    accel_lon = get(ACCFS, rec, roadway, vehicle_index, pastframe)
-    LatLonAccelDirection(accel_lat, accel_lon,1)
-end
-function pull_action!(::Type{LatLonAccelDirection}, a::Vector{Float64}, rec::SceneRecord, roadway::Roadway, vehicle_index::Int, pastframe::Int=0)
-    a[1] = get(ACCFT, rec, roadway, vehicle_index, pastframe)
-    a[2] = get(ACCFS, rec, roadway, vehicle_index, pastframe)
-    a
-end
+# function Base.get(::Type{LatLonAccelDirection}, rec::SceneRecord, roadway::Roadway, vehicle_index::Int, pastframe::Int=0)
+#     accel_lat = get(ACCFT, rec, roadway, vehicle_index, pastframe)
+#     accel_lon = get(ACCFS, rec, roadway, vehicle_index, pastframe)
+#     LatLonAccelDirection(accel_lat, accel_lon,1)
+# end
+# function pull_action!(::Type{LatLonAccelDirection}, a::Vector{Float64}, rec::SceneRecord, roadway::Roadway, vehicle_index::Int, pastframe::Int=0)
+#     a[1] = get(ACCFT, rec, roadway, vehicle_index, pastframe)
+#     a[2] = get(ACCFS, rec, roadway, vehicle_index, pastframe)
+#     a
+# end
 
 mutable struct AccelSteeringDirection
     a::Float64 # accel [m/s²]
@@ -95,7 +95,7 @@ function Base.copyto!(v::Vector{Float64}, a::AccelSteeringDirection)
     v
 end
 #function propagate(veh::Entity{VehicleState, BicycleModel, Int}, action::AccelSteeringAngle, roadway::Roadway, Δt::Float64)
-function AutomotiveDrivingModels.propagate(veh::Entity{VehicleState, D, Int}, action::AccelSteeringDirection, roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
+function AutomotiveSimulator.propagate(veh::Entity{VehicleState, D, Int}, action::AccelSteeringDirection, roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
     previousInd = veh.state.posF.roadind
     
     L = veh.def.a + veh.def.b
@@ -169,7 +169,7 @@ function NextState()
     return NextState(0.0,0.0,0.0,0.0,1)
 end
 
-function AutomotiveDrivingModels.propagate(veh::Entity{VehicleState, D, Int}, action::NextState,  roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
+function AutomotiveSimulator.propagate(veh::Entity{VehicleState, D, Int}, action::NextState, roadway::Roadway, Δt::Float64) where {D<:Union{VehicleDef, BicycleModel}}
     previousInd = veh.state.posF.roadind
 
     posG = VecSE2(action.x, action.y, action.theta)

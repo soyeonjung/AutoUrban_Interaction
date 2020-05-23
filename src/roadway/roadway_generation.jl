@@ -481,7 +481,7 @@ function connect_general!(source::Lane, dest::Lane,direction::Tuple{Int,Int}=(1,
         cindS = curveindex_end(source.curve)
         cindD = CURVEINDEX_START
 
-        unshift!(source.exits,   LaneConnection(true,  cindS, RoadIndex(cindD, dest.tag)))
+        unshift!(source.exits,  LaneConnection(true,  cindS, RoadIndex(cindD, dest.tag)))
         unshift!(dest.entrances, LaneConnection(false, cindD, RoadIndex(cindS, source.tag)))
         (source, dest)
     elseif direction[1]==1 && direction[2] ==-1
