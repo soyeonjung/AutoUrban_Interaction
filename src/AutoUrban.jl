@@ -36,6 +36,7 @@ export
     in_lanes,
     get_max_curvature
 
+include("roadway/interaction_roadway.jl")
 include("roadway/roadway_generation.jl")
 include("roadway/roadway_perception.jl")
 include("roadway/roadway_intersection.jl")
