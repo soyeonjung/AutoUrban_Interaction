@@ -11,7 +11,9 @@ Distributions = "31c24e10-a181-5473-b8eb-7969acd0382f"
 EzXML = "8f5d6c58-4d21-5cfd-889c-e3ad7ee6a615"
 LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
 Pkg = "44cfe95a-1eb2-52ea-b672-e2afdf69b78f"
+Polynomials = "f27b6e38-b328-58d1-80ce-0feddd5e7a45"
 Printf = "de0858da-6303-5e67-8744-51eddeeeb8d7"
+PyPlot = "d330b81b-6aea-500a-939a-2ce795aea3ee"
 Reactive = "a223df75-4e93-5b7c-acf9-bdd599c0f4de"
 
 [extras]

@@ -3,6 +3,27 @@ function get_lane_length(lane)
     s = lane.curve[ind].s    
 end
 
+function get_paramPoly3_coeffs!(lane)
+    ox, oy = lane.curve[1].pos.x, lane.curve[1].pos.y
+    theta = -mod2pi(lane.curve[1].pos.θ)
+    
+    new_coods_x, new_coods_y = [], []
+    for k = 1:size(lane.curve,1)
+        px, py = lane.curve[k].pos.x, lane.curve[k].pos.y        
+        px_new = cos(theta) * (px-ox) - sin(theta) * (py-oy)
+        py_new = sin(theta) * (px-ox) + cos(theta) * (py-oy)
+        append!(new_coods_x, px_new)
+        append!(new_coods_y, py_new)
+    end
+    new_coods_x = Array{Float64}(new_coods_x)
+    new_coods_y = Array{Float64}(new_coods_y)
+
+    u = range(0, 1, length=length(new_coods_x))
+    poly_x = fit(u, new_coods_x, 3)
+    poly_y = fit(u, new_coods_y, 3)
+    return poly_x, poly_y
+end
+
 function convert_JuliaLaneId2VTDLaneId(laneTag,roadway)
     seg = roadway.segments[laneTag.segment]
     id_Julia = laneTag.lane
@@ -91,6 +112,7 @@ function convert_seg!(seg,r,roadway)
     road = addelement!(r,"road")
     road["name"]=""
     road["id"]=seg.id
+    
     lane=seg.lanes[1]
     s = get_lane_length(lane)
     road["length"]= s
@@ -107,13 +129,32 @@ function convert_seg!(seg,r,roadway)
     geometry["s"]=0.0
     geometry["x"]=lane.curve[1].pos.x
     geometry["y"]=lane.curve[1].pos.y
-    geometry["hdg"]=mod2pi(lane.curve[1].pos.θ)
+    geometry["hdg"]= mod2pi(lane.curve[1].pos.θ)
     geometry["length"]=s
+    
     if lane.curve[1].k == 0 || isnan(lane.curve[1].k)
+        print("\nseg", seg.id, " planView : line")
         line=addelement!(geometry,"line")
+        
+#     else
+#         print("\nseg", seg.id, " planView : arc")
+#         arc=addelement!(geometry,"arc")
+#         arc["curvature"]=lane.curve[1].k
+
     else
-        arc=addelement!(geometry,"arc")
-        arc["curvature"]=lane.curve[1].k
+        print("\nseg", seg.id, " planView : paramPoly3")
+        poly_x, poly_y = get_paramPoly3_coeffs!(lane)
+        paramPoly3=addelement!(geometry,"paramPoly3")
+        
+        paramPoly3["aU"] = poly_x[0] 
+        paramPoly3["bU"] = poly_x[1] 
+        paramPoly3["cU"] = poly_x[2]
+        paramPoly3["dU"] = poly_x[3] 
+        paramPoly3["aV"] = poly_y[0]
+        paramPoly3["bV"] = poly_y[1] 
+        paramPoly3["cV"] = poly_y[2] 
+        paramPoly3["dV"] = poly_y[3]
+        paramPoly3["pRange"] = [0,1]   
     end
     
     #deal with lanes
